@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,14 @@ namespace PhotoApp_MVC.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Users
         public async Task<IActionResult> Index()
         {
             return View(await _context.Users.ToListAsync());
         }
 
+        [Authorize]
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,12 +45,14 @@ namespace PhotoApp_MVC.Controllers
             return View(user);
         }
 
+        [AllowAnonymous]
         // GET: Users/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [AllowAnonymous]
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -64,6 +69,7 @@ namespace PhotoApp_MVC.Controllers
             return View(user);
         }
 
+        [Authorize]
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -83,6 +89,7 @@ namespace PhotoApp_MVC.Controllers
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Password")] User user)
@@ -115,6 +122,7 @@ namespace PhotoApp_MVC.Controllers
             return View(user);
         }
 
+        [Authorize]
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -133,6 +141,7 @@ namespace PhotoApp_MVC.Controllers
             return View(user);
         }
 
+        [Authorize]
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

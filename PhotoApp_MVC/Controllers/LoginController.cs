@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using PhotoApp_MVC.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
@@ -20,6 +22,7 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
@@ -32,28 +35,33 @@ namespace WebApplication1.Controllers
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
 
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Name == username && u.Password == password);
+            User user = await _context.Users
+                                .Include(u => u.Role).
+                                FirstOrDefaultAsync(u => u.EmailAdress == loginViewModel.EmailAdress
+                            && u.Password == loginViewModel.Password);
 
             if (user != null)
             {
+
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.NameIdentifier, loginViewModel.EmailAdress),
+                    new Claim(ClaimTypes.Role,user.Role.Name)
                 };
 
-                var ClaimsIdentity = new ClaimsIdentity(claims, "Login");
+                var ClaimsIdentity = new ClaimsIdentity(claims, "ClaimsIdentity");
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(ClaimsIdentity));
 
-                return RedirectToAction(nameof(Index), nameof(HomeController));
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View();
             }
         }
@@ -62,6 +70,7 @@ namespace WebApplication1.Controllers
         /// ログアウト
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
