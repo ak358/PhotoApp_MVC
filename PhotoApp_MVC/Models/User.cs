@@ -6,7 +6,6 @@ namespace PhotoApp_MVC.Models
 {
     public class User
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         public string Name { get; set; }
 
@@ -14,10 +13,12 @@ namespace PhotoApp_MVC.Models
         public string EmailAdress { get; set; }
         public string Password { get; set; }
         [ValidateNever]
+        [ForeignKey("RoleId")]
         public Role Role { get; set; }
         [ValidateNever]
         public List<Category> Categories { get; set; }
         [ValidateNever]
         public List<PhotoPost> PhotoPosts { get; set; }
+        public int RoleId { get; internal set; }
     }
 }

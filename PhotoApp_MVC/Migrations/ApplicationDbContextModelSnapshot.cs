@@ -23,7 +23,10 @@ namespace PhotoApp_MVC.Migrations
             modelBuilder.Entity("PhotoApp_MVC.Models.Category", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -37,12 +40,29 @@ namespace PhotoApp_MVC.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Category 1",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Category 2",
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("PhotoApp_MVC.Models.PhotoPost", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -61,12 +81,31 @@ namespace PhotoApp_MVC.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PhotoPosts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Title = "Post 1",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Title = "Post 2",
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("PhotoApp_MVC.Models.Role", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -75,12 +114,27 @@ namespace PhotoApp_MVC.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("PhotoApp_MVC.Models.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EmailAdress")
                         .IsRequired()
@@ -102,6 +156,24 @@ namespace PhotoApp_MVC.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EmailAdress = "admin@example.com",
+                            Name = "AdminUser",
+                            Password = "adminpassword",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EmailAdress = "user@example.com",
+                            Name = "RegularUser",
+                            Password = "userpassword",
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("PhotoApp_MVC.Models.Category", b =>

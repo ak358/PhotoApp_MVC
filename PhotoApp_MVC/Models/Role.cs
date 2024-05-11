@@ -6,7 +6,6 @@ namespace PhotoApp_MVC.Models
 {
     public class Role
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         public string Name { get; set; }
     }

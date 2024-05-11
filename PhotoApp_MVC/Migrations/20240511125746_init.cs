@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PhotoApp_MVC.Migrations
 {
     /// <inheritdoc />
@@ -14,7 +16,8 @@ namespace PhotoApp_MVC.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -26,7 +29,8 @@ namespace PhotoApp_MVC.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailAdress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -47,7 +51,8 @@ namespace PhotoApp_MVC.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -66,7 +71,8 @@ namespace PhotoApp_MVC.Migrations
                 name: "PhotoPosts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -86,6 +92,42 @@ namespace PhotoApp_MVC.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "User" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "EmailAdress", "Name", "Password", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "admin@example.com", "AdminUser", "adminpassword", 1 },
+                    { 2, "user@example.com", "RegularUser", "userpassword", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Category 1", 1 },
+                    { 2, "Category 2", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PhotoPosts",
+                columns: new[] { "Id", "CategoryId", "Title", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1, "Post 1", 1 },
+                    { 2, 2, "Post 2", 2 }
                 });
 
             migrationBuilder.CreateIndex(
