@@ -4,9 +4,6 @@
     ViewData["Title"] = "Index";
 }
 <h1>Login</h1>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @using (Html.BeginForm("Index", "Login", FormMethod.Post))
 {
     <div asp-validation-summary="All"></div>

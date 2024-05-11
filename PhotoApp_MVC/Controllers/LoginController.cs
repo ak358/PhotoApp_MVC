@@ -1,53 +1,71 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using PhotoApp_MVC.Controllers;
+using Microsoft.EntityFrameworkCore;
+using PhotoApp_MVC.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApplication1.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        private readonly ApplicationDbContext _context;
+
+        public LoginController(ApplicationDbContext context)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _context = context;
         }
 
-        // ログインフォームを表示するためのアクション
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
 
-        // ログインを処理するためのアクション
+        /// <summary>
+        /// ログイン
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Index(string username, string password, string returnUrl)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            // ログインを試行する
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
 
-            if (result.Succeeded)
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Name == username && u.Password == password);
+
+            if (user != null)
             {
-                // ログイン成功した場合、リダイレクトする
-                return Redirect(returnUrl ?? "/");
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, username)
+                };
+
+                var ClaimsIdentity = new ClaimsIdentity(claims, "Login");
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(ClaimsIdentity));
+
+                return RedirectToAction(nameof(Index), nameof(HomeController));
             }
             else
             {
-                // ログイン失敗した場合、再度ログインフォームを表示する
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View();
             }
         }
 
-        // ログアウトを処理するためのアクション
+        /// <summary>
+        /// ログアウト
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            // ログアウトする
-            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync();
             return RedirectToAction(nameof(Index));
         }
     }
