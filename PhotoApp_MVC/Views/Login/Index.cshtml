@@ -1,0 +1,22 @@
+﻿@model PhotoApp_MVC.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Login</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@using (Html.BeginForm("Index", "Login", FormMethod.Post))
+{
+    <div asp-validation-summary="All"></div>
+    <div>
+        <label asp-for="EmailAdress"></label>
+        <input asp-for="EmailAdress" />
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+    </div>
+    <button type="submit">Login</button>
+}
