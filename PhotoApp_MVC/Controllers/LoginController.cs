@@ -50,7 +50,7 @@ namespace WebApplication1.Controllers
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, loginViewModel.EmailAdress),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Role,user.Role.Name)
                 };
 
