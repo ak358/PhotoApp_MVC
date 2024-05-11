@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories;
 
 namespace PhotoApp_MVC.Controllers
 {
@@ -14,10 +16,12 @@ namespace PhotoApp_MVC.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, IUserRepository userRepository)
         {
             _context = context;
+            _userRepository = userRepository;
         }
 
         // GET: Categories
@@ -57,6 +61,14 @@ namespace PhotoApp_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
         {
+            var user = await _userRepository.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            category.User = user;
             if (ModelState.IsValid)
             {
                 _context.Add(category);
