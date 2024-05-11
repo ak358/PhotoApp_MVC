@@ -5,6 +5,7 @@ namespace PhotoApp_MVC.Models
 {
     public class Category
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] 
         public int Id { get; set; }
         public string Name { get; set; }
         [ValidateNever]
