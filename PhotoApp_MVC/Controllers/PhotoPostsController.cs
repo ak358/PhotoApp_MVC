@@ -7,18 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories;
 
 namespace PhotoApp_MVC.Controllers
 {
     [Authorize]
     public class PhotoPostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
 
-        public PhotoPostsController(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
+
+        public PhotoPostsController(ApplicationDbContext context, IUserRepository userRepository)
         {
             _context = context;
+            _userRepository = userRepository;
         }
+
 
         // GET: PhotoPosts
         public async Task<IActionResult> Index()
@@ -45,8 +50,14 @@ namespace PhotoApp_MVC.Controllers
         }
 
         // GET: PhotoPosts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            User user = await _userRepository.GetUserAsync(User);
+
+            if (user.Categories != null)
+            {
+                ViewBag.CategoryList = new SelectList(user.Categories.ToList(), "Id", "Name");
+            }
             return View();
         }
 
@@ -55,7 +66,7 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] PhotoPost photoPost)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,imageURL")] PhotoPost photoPost)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +98,7 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] PhotoPost photoPost)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,imageURL")] PhotoPost photoPost)
         {
             if (id != photoPost.Id)
             {
