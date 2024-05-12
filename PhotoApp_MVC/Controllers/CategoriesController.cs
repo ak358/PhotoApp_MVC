@@ -106,6 +106,15 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
+            var user = await _userRepository.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            category.User = user;
+
             if (ModelState.IsValid)
             {
                 try
@@ -155,11 +164,24 @@ namespace PhotoApp_MVC.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categories.Remove(category);
-            }
+                var relatedPhotoPostCount = await _context.PhotoPosts.CountAsync(pp => pp.CategoryId == category.Id);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (relatedPhotoPostCount == 0)
+                {
+                    _context.Categories.Remove(category);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "関連する写真が存在するため、カテゴリーを削除できません。");
+                    return View(category);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         private bool CategoryExists(int id)
