@@ -23,7 +23,11 @@ namespace PhotoApp_MVC.Repositories
                 return null;
             }
 
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return await _context.Users
+                .Include(u => u.Categories) // カテゴリを含める
+                .Include(u=> u.PhotoPosts)
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
     }
 }
