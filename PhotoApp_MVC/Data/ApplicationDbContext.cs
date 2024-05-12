@@ -51,11 +51,11 @@ public class ApplicationDbContext : DbContext
                 new Category { Id = 2, Name = "Category 2", UserId = 2 }
             );
 
-        // Add photo posts
-        modelBuilder.Entity<PhotoPost>().HasData(
-                    new PhotoPost { Id = 1, Title = "Post 1", Description = "Description 1", imageURL = "imageURL 1", CategoryId = 1, UserId = 1 },
-                    new PhotoPost { Id = 2, Title = "Post 2", Description = "Description 2", imageURL = "imageURL 2", CategoryId = 2, UserId = 2 }
-                );
+            // Add photo posts
+            modelBuilder.Entity<PhotoPost>().HasData(
+                new PhotoPost { Id = 1, Title = "Post 1", CategoryId = 1, UserId = 1 },
+                new PhotoPost { Id = 2, Title = "Post 2", CategoryId = 2, UserId = 2 }
+            );
     }
 
 }

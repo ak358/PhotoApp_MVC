@@ -67,12 +67,20 @@ namespace PhotoApp_MVC.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("imageURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -87,15 +95,19 @@ namespace PhotoApp_MVC.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
+                            Description = "Description 1",
                             Title = "Post 1",
-                            UserId = 1
+                            UserId = 1,
+                            imageURL = "imageURL 1"
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 2,
+                            Description = "Description 2",
                             Title = "Post 2",
-                            UserId = 2
+                            UserId = 2,
+                            imageURL = "imageURL 2"
                         });
                 });
 
