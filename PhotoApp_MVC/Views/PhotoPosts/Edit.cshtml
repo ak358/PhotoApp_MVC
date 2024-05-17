@@ -1,4 +1,4 @@
-﻿@model PhotoApp_MVC.Models.PhotoPost
+﻿@model PhotoApp_MVC.ViewModels.PhotoPostViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -17,6 +17,21 @@
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryName" class="control-label"></label>
+                <select asp-for="CategoryName" class="form-control" asp-items="Model.Categories"></select>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

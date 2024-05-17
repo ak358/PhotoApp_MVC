@@ -61,8 +61,8 @@ public class ApplicationDbContext : DbContext
                     ImageUrl = "sample-url.jpg",
                     CategoryId = 1,
                     UserId = 1,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 }
             );
 
