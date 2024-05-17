@@ -63,11 +63,23 @@ namespace PhotoApp_MVC.Controllers
         // GET: Users/Create
         public async Task<IActionResult> CreateAsync()
         {
-            var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+            List<SelectListItem> roleSelectList = new List<SelectListItem>();
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
-                Value = c.Name,
-                Text = c.Name
-            }).ToList();
+                roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+                {
+                    Value = c.Name,
+                    Text = c.Name
+                }).ToList();
+            }
+            else
+            {
+                roleSelectList = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "User", Text = "User" }
+                };
+            }
 
             var userViewModel = new UserViewModel
             {
