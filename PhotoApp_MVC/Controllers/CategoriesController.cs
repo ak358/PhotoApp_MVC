@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories;
 using PhotoApp_MVC.Repositories.IRepositories;
 
 namespace PhotoApp_MVC.Controllers
@@ -31,7 +32,15 @@ namespace PhotoApp_MVC.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var user = await _userRepository.GetUserByClaimsAsync(User);
+
+            var categories = await _context.Categories
+                .Include(c => c.User)
+                .Include(c => c.PhotoPosts)
+                .Where(c => c.UserId == user.Id)
+                .ToListAsync();
+
+            return View(categories);
         }
 
         // GET: Categories/Details/5

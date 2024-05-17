@@ -35,7 +35,15 @@ namespace PhotoApp_MVC.Controllers
         // GET: PhotoPosts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PhotoPosts.ToListAsync());
+            var user = await _userRepository.GetUserByClaimsAsync(User);
+
+            var photoPosts = await _context.PhotoPosts
+                .Include(c => c.User)
+                .Include(c => c.Category)
+                .Where(c => c.UserId == user.Id)
+                .ToListAsync();
+
+            return View(photoPosts);
         }
 
         // GET: PhotoPosts/Details/5
