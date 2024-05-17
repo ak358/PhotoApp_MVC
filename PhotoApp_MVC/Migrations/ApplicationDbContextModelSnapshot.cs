@@ -102,11 +102,11 @@ namespace PhotoApp_MVC.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 5, 17, 8, 7, 54, 495, DateTimeKind.Utc).AddTicks(9795),
+                            CreatedAt = new DateTime(2024, 5, 18, 1, 1, 30, 622, DateTimeKind.Local).AddTicks(5194),
                             Description = "This is a sample description",
                             ImageUrl = "sample-url.jpg",
                             Title = "Sample Post",
-                            UpdatedAt = new DateTime(2024, 5, 17, 8, 7, 54, 495, DateTimeKind.Utc).AddTicks(9797),
+                            UpdatedAt = new DateTime(2024, 5, 18, 1, 1, 30, 622, DateTimeKind.Local).AddTicks(5204),
                             UserId = 1
                         });
                 });
@@ -150,7 +150,7 @@ namespace PhotoApp_MVC.Migrations
 
                     b.Property<string>("EmailAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -158,12 +158,16 @@ namespace PhotoApp_MVC.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmailAdress")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
