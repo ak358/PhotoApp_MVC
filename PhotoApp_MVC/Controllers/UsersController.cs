@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories.IRepositories;
+using PhotoApp_MVC.ViewModels;
 
 namespace PhotoApp_MVC.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public UsersController(ApplicationDbContext context)
+        private readonly IUserRepository _userRepository;
+        public UsersController(ApplicationDbContext context, 
+            IUserRepository userRepository)
         {
             _context = context;
+            _userRepository = userRepository;
         }
 
         [Authorize(Roles = "Admin")]
@@ -35,21 +40,41 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _userRepository.GetUserByIdAsync((int)id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            var userViewModel = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                EmailAdress = user.EmailAdress,
+                Password = user.Password,
+                RoleName = user.Role.Name
+            };
+
+            return View(userViewModel);
         }
 
         [AllowAnonymous]
         // GET: Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            return View();
+            var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+            {
+                Value = c.Name,
+                Text = c.Name
+            }).ToList();
+
+            var userViewModel = new UserViewModel
+            {
+                Roles = roleSelectList
+            };
+
+            return View(userViewModel);
         }
 
         [AllowAnonymous]
@@ -58,32 +83,83 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Password")] User user)
-        {
+        public async Task<IActionResult> Create([Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
+        { 
+            bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
+            if (emailExists)
+            {
+                ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+            }
+
+            Role role = _context.Roles.FirstOrDefault(r => r.Name == userViewModel.RoleName);
+
+            if(role == null)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
+                User user = new User()
+                {
+                    Name = userViewModel.Name,
+                    Password = userViewModel.Password,
+                    EmailAdress = userViewModel.EmailAdress,
+                    Role = role,
+                    RoleId = role.Id
+                };
+
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+
+            var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+            {
+                Value = c.Name,
+                Text = c.Name
+            }).ToList();
+
+            userViewModel.Roles = roleSelectList;
+
+            return View(userViewModel);
         }
 
         [Authorize]
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetUserByIdAsync((int)id);
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
+
+            var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+            {
+                Value = c.Name,
+                Text = c.Name
+            }).ToList();
+
+            var userViewModel = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                EmailAdress = user.EmailAdress,
+                Password = user.Password,
+                RoleName = user.Role.Name
+            };
+
+            userViewModel.Roles = roleSelectList;
+
+            return View(userViewModel);
+
         }
 
         // POST: Users/Edit/5
@@ -92,17 +168,28 @@ namespace PhotoApp_MVC.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Password")] User user)
+        public async Task<IActionResult> Edit(int id,
+            [Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
         {
-            if (id != user.Id)
+            bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
+            if (emailExists)
             {
-                return NotFound();
+                ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
             }
 
             if (ModelState.IsValid)
             {
+                User user = await _userRepository.GetUserByIdAsync((int)id);
+
                 try
                 {
+                    user.Name = userViewModel.Name;
+                    user.EmailAdress = userViewModel.EmailAdress;
+                    user.Password = userViewModel.Password;
+
+                    Role role = _context.Roles.FirstOrDefault(r => r.Name == userViewModel.RoleName);
+                    user.Role = role;
+
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -119,7 +206,16 @@ namespace PhotoApp_MVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+
+            var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
+            {
+                Value = c.Name,
+                Text = c.Name
+            }).ToList();
+
+            userViewModel.Roles = roleSelectList;
+
+            return View(userViewModel);
         }
 
         [Authorize]
@@ -131,14 +227,23 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _userRepository.GetUserByIdAsync((int)id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            var userViewModel = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                EmailAdress = user.EmailAdress,
+                Password = user.Password,
+                RoleName = user.Role.Name
+            };
+
+            return View(userViewModel);
         }
 
         [Authorize]
@@ -147,7 +252,7 @@ namespace PhotoApp_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetUserByIdAsync((int)id);
             if (user != null)
             {
                 _context.Users.Remove(user);

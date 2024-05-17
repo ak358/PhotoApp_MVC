@@ -34,6 +34,10 @@ public class ApplicationDbContext : DbContext
             .WithMany(u => u.Categories)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<User>()
+        .HasIndex(u => u.EmailAdress)
+        .IsUnique();
+
         // Add roles
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = 1, Name = "Admin" },

@@ -14,10 +14,19 @@ namespace PhotoApp_MVC.Repositories
             _context = context;
         }
 
-        public async Task<User> GetUserAsync(ClaimsPrincipal userClaimsPrincipal)
+        public async Task<User> GetUserByIdAsync(int id)
         {
-            var userIdClaim = userClaimsPrincipal.Claims.
-                FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return await _context.Users
+                .Include(u => u.Categories)
+                .Include(u => u.PhotoPosts)
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<User> GetUserByClaimsAsync(ClaimsPrincipal userClaimsPrincipal)
+        {
+            string userIdClaim = userClaimsPrincipal.Claims
+                    .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             {
@@ -25,8 +34,8 @@ namespace PhotoApp_MVC.Repositories
             }
 
             return await _context.Users
-                .Include(u => u.Categories) // カテゴリを含める
-                .Include(u=> u.PhotoPosts)
+                .Include(u => u.Categories)
+                .Include(u => u.PhotoPosts)
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
