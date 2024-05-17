@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories.IRepositories;
 using System.Security.Claims;
 
 namespace PhotoApp_MVC.Repositories
