@@ -1,4 +1,4 @@
-﻿@model PhotoApp_MVC.Models.PhotoPost
+﻿@model PhotoApp_MVC.ViewModels.PhotoPostViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -29,6 +29,13 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ImageUrl)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CategoryName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedAt)
         </dt>

@@ -64,7 +64,18 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            return View(photoPost);
+            var photoPostViewModel = new PhotoPostViewModel
+            {
+                Id = photoPost.Id,
+                Title = photoPost.Title,
+                Description = photoPost.Description,
+                ImageUrl = photoPost.ImageUrl,
+                CategoryName = photoPost.Category.Name,
+                CreatedAt = photoPost.CreatedAt,
+                UpdatedAt = photoPost.UpdatedAt
+            };
+
+            return View(photoPostViewModel);
         }
 
         // GET: PhotoPosts/Create
@@ -250,13 +261,26 @@ namespace PhotoApp_MVC.Controllers
             }
 
             var photoPost = await _context.PhotoPosts
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (photoPost == null)
             {
                 return NotFound();
             }
 
-            return View(photoPost);
+            var photoPostViewModel = new PhotoPostViewModel
+            {
+                Id = photoPost.Id,
+                Title = photoPost.Title,
+                Description = photoPost.Description,
+                ImageUrl = photoPost.ImageUrl,
+                CategoryName = photoPost.Category.Name,
+                CreatedAt = photoPost.CreatedAt,
+                UpdatedAt = photoPost.UpdatedAt
+            };
+
+            return View(photoPostViewModel);
         }
 
         // POST: PhotoPosts/Delete/5
