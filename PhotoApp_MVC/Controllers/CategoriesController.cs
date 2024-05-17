@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
-using PhotoApp_MVC.Repositories;
+using PhotoApp_MVC.Repositories.IRepositories;
 
 namespace PhotoApp_MVC.Controllers
 {
@@ -17,11 +17,15 @@ namespace PhotoApp_MVC.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoriesController(ApplicationDbContext context, IUserRepository userRepository)
+        public CategoriesController(ApplicationDbContext context,
+            IUserRepository userRepository,
+            ICategoryRepository categoryRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: Categories
@@ -40,6 +44,7 @@ namespace PhotoApp_MVC.Controllers
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (category == null)
             {
                 return NotFound();

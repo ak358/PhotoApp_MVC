@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Repositories;
+using PhotoApp_MVC.Repositories.IRepositories;
 
 internal class Program
 {
@@ -18,7 +19,7 @@ internal class Program
             .AddCookie(options => options.LoginPath = "/Login");
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         var app = builder.Build();
 
