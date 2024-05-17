@@ -36,6 +36,9 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
                                 </li>
                             }
+                            <form action="@Url.Action("Logout", "Login")" method="post">
+                                <button type="submit" class="nav-link text-dark" style="background-color: transparent; border: none;">Logout</button>
+                            </form>
                         </ul>
                     }
                 </div>

@@ -26,6 +26,10 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -75,7 +79,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Login));
         }
     }
 }
