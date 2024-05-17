@@ -62,7 +62,7 @@ namespace PhotoApp_MVC.Controllers
         // GET: PhotoPosts/Create
         public async Task<IActionResult> CreateAsync()
         {
-            var user = await _userRepository.GetUserAsync(User);
+            var user = await _userRepository.GetUserByClaimsAsync(User);
 
             var categories = _context.Categories
                 .Where(c => c.UserId == user.Id)
@@ -91,7 +91,7 @@ namespace PhotoApp_MVC.Controllers
         public async Task<IActionResult> Create(
             [Bind("Id,Title,Description ,ImageUrl,CategoryName")] PhotoPostViewModel photoPostViewModel)
         {
-            var user = await _userRepository.GetUserAsync(User);
+            var user = await _userRepository.GetUserByClaimsAsync(User);
 
             if (ModelState.IsValid)
             {
@@ -147,7 +147,7 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            var user = await _userRepository.GetUserAsync(User);
+            var user = await _userRepository.GetUserByClaimsAsync(User);
 
             var categories = await _categoryRepository.GetCategoriesByUserIdAsync(user.Id);
 

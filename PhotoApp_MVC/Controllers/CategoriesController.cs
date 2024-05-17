@@ -66,7 +66,7 @@ namespace PhotoApp_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
         {
-            var user = await _userRepository.GetUserAsync(User);
+            var user = await _userRepository.GetUserByClaimsAsync(User);
 
             if (user == null)
             {
