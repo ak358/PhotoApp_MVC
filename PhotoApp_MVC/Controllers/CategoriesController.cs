@@ -106,20 +106,18 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            var user = await _userRepository.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-
-            category.User = user;
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(category);
+                    var existingCategory = await _context.Categories.FindAsync(category.Id);
+                    if (existingCategory == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingCategory.Name = category.Name;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -174,7 +172,7 @@ namespace PhotoApp_MVC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "関連する写真が存在するため、カテゴリーを削除できません。");
+                    ModelState.AddModelError(string.Empty, "関連する写真が存在するため、カテゴリーを削除できません.");
                     return View(category);
                 }
             }
