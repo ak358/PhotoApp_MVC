@@ -1,8 +1,32 @@
-﻿@{
+﻿@model IEnumerable<PhotoPost>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<partial name="_section" />
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            @foreach (var photoPost in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="@photoPost.ImageUrl" class="bd-placeholder-img card-img-top" width="100%" height="225" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" alt="@photoPost.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@photoPost.Title</h5>
+                            <p class="card-text">@photoPost.Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-controller="PhotoPosts" asp-route-id="@photoPost.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                                    <a asp-action="Edit" asp-controller="PhotoPosts" asp-route-id="@photoPost.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                </div>
+                                <small class="text-body-secondary">@photoPost.CreatedAt.ToShortDateString()</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
 using PhotoApp_MVC.ViewModels;
 using System;
@@ -71,4 +71,6 @@ public class ApplicationDbContext : DbContext
             );
 
     }
+
+public DbSet<Contact> Contact { get; set; } = default!;
 }

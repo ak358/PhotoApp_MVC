@@ -1,23 +1,41 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
+using PhotoApp_MVC.Repositories.IRepositories;
 using System.Diagnostics;
+using X.PagedList;
 
 namespace PhotoApp_MVC.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly IPhotoPostRepository _photoPostRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+            ApplicationDbContext context,
+            IPhotoPostRepository photoPostRepository)
         {
             _logger = logger;
+            _context = context;
+            _photoPostRepository = photoPostRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var photoPosts = await _photoPostRepository.GetPhotoPostsAsync();
+            //int? page
+            //int pageSize = 9;
+            //int pageNumber = (page ?? 1);
+
+            //var photoPosts = _context.PhotoPosts
+            //    .OrderBy(p => p.UpdatedAt)
+            //    .ToPagedList(pageNumber, pageSize);
+
+            return View(photoPosts);
         }
 
         public IActionResult Privacy()
