@@ -97,10 +97,16 @@ namespace PhotoApp_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
         { 
+
             bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
             if (emailExists)
             {
                 ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index),"Home");
             }
 
             Role role = _context.Roles.FirstOrDefault(r => r.Name == userViewModel.RoleName);
@@ -123,7 +129,11 @@ namespace PhotoApp_MVC.Controllers
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index), "Home");
             }
 
             var roleSelectList = _context.Roles.ToList().Select(c => new SelectListItem
