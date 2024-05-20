@@ -12,6 +12,7 @@ using PhotoApp_MVC.Models;
 using PhotoApp_MVC.Repositories;
 using PhotoApp_MVC.Repositories.IRepositories;
 using PhotoApp_MVC.ViewModels;
+using X.PagedList;
 
 namespace PhotoApp_MVC.Controllers
 {
@@ -21,19 +22,22 @@ namespace PhotoApp_MVC.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public PhotoPostsController(ApplicationDbContext context,
             IUserRepository userRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
         // GET: PhotoPosts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             var user = await _userRepository.GetUserByClaimsAsync(User);
 
@@ -43,8 +47,17 @@ namespace PhotoApp_MVC.Controllers
                 .Where(c => c.UserId == user.Id)
                 .ToListAsync();
 
-            return View(photoPosts);
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+
+            IPagedList<PhotoPost> photoPostsList = 
+                photoPosts
+                .OrderBy(p => p.UpdatedAt)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(photoPostsList);
         }
+
 
         // GET: PhotoPosts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -108,12 +121,24 @@ namespace PhotoApp_MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Title,Description ,ImageUrl,CategoryName")] PhotoPostViewModel photoPostViewModel)
+            [Bind("Id,Title,Description,CategoryName")] PhotoPostViewModel photoPostViewModel,
+            IFormFile imageFile)
         {
             var user = await _userRepository.GetUserByClaimsAsync(User);
 
             if (ModelState.IsValid)
             {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+                var relativePath = Path.Combine("images", uniqueFileName).Replace("\\", "/");
+
 
                 var category = await _categoryRepository.GetCategoryByNameAsync(photoPostViewModel.CategoryName);
 
@@ -122,19 +147,19 @@ namespace PhotoApp_MVC.Controllers
                     return View(photoPostViewModel);
                 }
 
-                var CreatedTime = DateTime.Now;
+                var createdTime = DateTime.Now;
 
                 PhotoPost photoPost = new()
                 {
                     Title = photoPostViewModel.Title,
                     Description = photoPostViewModel.Description,
-                    ImageUrl = photoPostViewModel.ImageUrl,
+                    ImageUrl = relativePath,
                     Category = category,
                     User = user,
                     CategoryId = category.Id,
                     UserId = user.Id,
-                    CreatedAt = CreatedTime,
-                    UpdatedAt = CreatedTime
+                    CreatedAt = createdTime,
+                    UpdatedAt = createdTime
                 };
 
                 _context.Add(photoPost);
@@ -155,7 +180,6 @@ namespace PhotoApp_MVC.Controllers
 
                 return View(photoPostViewModel);
             }
-
         }
 
         // GET: PhotoPosts/Edit/5

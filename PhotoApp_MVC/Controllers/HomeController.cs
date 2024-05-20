@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhotoApp_MVC.Models;
 using PhotoApp_MVC.Repositories.IRepositories;
+using PhotoApp_MVC.ViewModels;
 using System.Diagnostics;
 using X.PagedList;
 
@@ -24,18 +26,42 @@ namespace PhotoApp_MVC.Controllers
             _photoPostRepository = photoPostRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? page)
         {
-            var photoPosts = await _photoPostRepository.GetPhotoPostsAsync();
-            //int? page
-            //int pageSize = 9;
-            //int pageNumber = (page ?? 1);
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
 
-            //var photoPosts = _context.PhotoPosts
-            //    .OrderBy(p => p.UpdatedAt)
-            //    .ToPagedList(pageNumber, pageSize);
+            var categories = GetCategoriesSelectList();
 
-            return View(photoPosts);
+            var photoPostsViewModel = _context.PhotoPosts
+                .OrderBy(p => p.UpdatedAt)
+                .Select(p => new PhotoPostViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    ImageUrl = p.ImageUrl,
+                    CategoryName = p.Category.Name,
+                    UserName = p.User.Name,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    Categories = categories
+                })
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(photoPostsViewModel);
+        }
+
+        private List<SelectListItem> GetCategoriesSelectList()
+        {
+            var categories = _context.Categories.ToList();
+            var selectListItems = categories.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            }).ToList();
+
+            return selectListItems;
         }
 
         public IActionResult Privacy()
