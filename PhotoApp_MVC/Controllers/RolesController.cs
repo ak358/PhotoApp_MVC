@@ -139,12 +139,23 @@ namespace PhotoApp_MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var role = await _context.Roles.FindAsync(id);
-            if (role != null)
+
+            if (role == null)
             {
-                _context.Roles.Remove(role);
+                return NotFound();
             }
 
+            var usersWithRole = await _context.Users
+                .Where(u => u.RoleId == id).ToListAsync();
+            if (usersWithRole.Any())
+            {
+                ModelState.AddModelError(string.Empty, "このロールに関連付けられたユーザーが存在します。ロールを削除する前に関連付けられたユーザーを削除してください。");
+                return View(nameof(Index), await _context.Roles.ToListAsync());
+            }
+
+            _context.Roles.Remove(role);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
