@@ -113,6 +113,7 @@ namespace PhotoApp_MVC.Controllers
 
             if(role == null)
             {
+                ModelState.AddModelError("RoleName", "ロールが見つかりませんでした。");
                 return NotFound();
             }
 
@@ -129,10 +130,14 @@ namespace PhotoApp_MVC.Controllers
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+
                 if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
+                    TempData["Message"] = "登録完了しました。";
                     return RedirectToAction(nameof(Index));
                 }
+
+                TempData["Message"] = "登録完了しました。ログインしてください。";
                 return RedirectToAction(nameof(Index), "Home");
             }
 
@@ -193,16 +198,20 @@ namespace PhotoApp_MVC.Controllers
         public async Task<IActionResult> Edit(int id,
             [Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
         {
-            bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
-            if (emailExists)
+            User user = await _userRepository.GetUserByIdAsync((int)id);
+
+            if (user.EmailAdress != userViewModel.EmailAdress)
             {
-                ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+                bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
+                if (emailExists)
+                {
+                    ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserByIdAsync((int)id);
-
                 try
                 {
                     user.Name = userViewModel.Name;
@@ -226,6 +235,7 @@ namespace PhotoApp_MVC.Controllers
                         throw;
                     }
                 }
+                TempData["Message"] = "編集しました。";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -281,6 +291,7 @@ namespace PhotoApp_MVC.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["Message"] = "削除しました。";
             return RedirectToAction(nameof(Index));
         }
 
