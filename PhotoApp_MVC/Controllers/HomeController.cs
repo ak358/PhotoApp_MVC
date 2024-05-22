@@ -39,7 +39,7 @@ namespace PhotoApp_MVC.Controllers
                 {
                     Id = p.Id,
                     Title = p.Title,
-                    Description = p.Description,
+                    Description = p.Description.Length > 20 ? p.Description.Substring(0, 20) + "..." : p.Description,
                     ImageUrl = p.ImageUrl,
                     CategoryName = p.Category.Name,
                     UserName = p.User.Name,

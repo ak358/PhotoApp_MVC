@@ -82,7 +82,7 @@ namespace PhotoApp_MVC.Controllers
                 Id = photoPost.Id,
                 Title = photoPost.Title,
                 Description = photoPost.Description,
-                ImageUrl = photoPost.ImageUrl,
+                ImageUrl = "../../" + photoPost.ImageUrl,
                 CategoryName = photoPost.Category.Name,
                 CreatedAt = photoPost.CreatedAt,
                 UpdatedAt = photoPost.UpdatedAt
@@ -125,6 +125,7 @@ namespace PhotoApp_MVC.Controllers
             IFormFile imageFile)
         {
             var user = await _userRepository.GetUserByClaimsAsync(User);
+            photoPostViewModel.UserName = user.Name;
 
             if (ModelState.IsValid)
             {
@@ -200,7 +201,10 @@ namespace PhotoApp_MVC.Controllers
                 Text = c.Name
             }).ToList();
 
-            var photoPost = await _context.PhotoPosts.FindAsync(id);
+            var photoPost = await _context.PhotoPosts
+                .Include(c => c.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (photoPost == null)
             {
                 return NotFound();
@@ -298,7 +302,7 @@ namespace PhotoApp_MVC.Controllers
                 Id = photoPost.Id,
                 Title = photoPost.Title,
                 Description = photoPost.Description,
-                ImageUrl = photoPost.ImageUrl,
+                ImageUrl = "../../" + photoPost.ImageUrl,
                 CategoryName = photoPost.Category.Name,
                 CreatedAt = photoPost.CreatedAt,
                 UpdatedAt = photoPost.UpdatedAt
@@ -312,7 +316,10 @@ namespace PhotoApp_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var photoPost = await _context.PhotoPosts.FindAsync(id);
+            var photoPost = await _context.PhotoPosts
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (photoPost != null)
             {
                 _context.PhotoPosts.Remove(photoPost);

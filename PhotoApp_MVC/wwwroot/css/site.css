@@ -21,8 +21,13 @@ body {
   margin-bottom: 60px;
 }
 
+
+/* add */
 .card-img-top {
     width: 100%;
     height: auto;
-    object-fit: contain;
+    object-fit: cover; /* 画像のアスペクト比を保持しながら切り取る */
+    aspect-ratio: 1; /* 正方形にするためのアスペクト比 */
 }
+
+
