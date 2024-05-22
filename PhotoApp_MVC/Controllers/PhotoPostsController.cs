@@ -85,7 +85,8 @@ namespace PhotoApp_MVC.Controllers
                 ImageUrl = "../../" + photoPost.ImageUrl,
                 CategoryName = photoPost.Category.Name,
                 CreatedAt = photoPost.CreatedAt,
-                UpdatedAt = photoPost.UpdatedAt
+                UpdatedAt = photoPost.UpdatedAt,
+                UserId = photoPost.User.Id
             };
 
             return View(photoPostViewModel);
@@ -141,7 +142,8 @@ namespace PhotoApp_MVC.Controllers
                 var relativePath = Path.Combine("images", uniqueFileName).Replace("\\", "/");
 
 
-                var category = await _categoryRepository.GetCategoryByNameAsync(photoPostViewModel.CategoryName);
+                var category = await _categoryRepository
+                    .GetCategoryByNameAsync(photoPostViewModel.CategoryName);
 
                 if (category == null)
                 {
@@ -215,7 +217,8 @@ namespace PhotoApp_MVC.Controllers
                 Id = photoPost.Id,
                 Title = photoPost.Title,
                 Description = photoPost.Description,
-                ImageUrl = photoPost.ImageUrl,
+                ImageUrl = "../../" + photoPost.ImageUrl,
+                UserName = photoPost.User.Name,
                 CategoryName = photoPost.Category.Name,
                 CreatedAt = photoPost.CreatedAt,
                 UpdatedAt = photoPost.UpdatedAt,
@@ -231,8 +234,9 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, 
-            [Bind("Id,Title,Description,ImageUrl,CategoryName")] PhotoPostViewModel photoPostViewModel)
+        public async Task<IActionResult> Edit(int id,
+            [Bind("Id,Title,Description,ImageUrl,CategoryName")] PhotoPostViewModel photoPostViewModel,
+            IFormFile imageFile)
         {
             var photoPost = await _context.PhotoPosts
                 .Include(p => p.Category)
@@ -244,20 +248,42 @@ namespace PhotoApp_MVC.Controllers
                 return NotFound();
             }
 
-            var category = await _categoryRepository.GetCategoryByNameAsync(photoPostViewModel.CategoryName);
-            
+            var category = await _categoryRepository
+                .GetCategoryByNameAsync(photoPostViewModel.CategoryName);
+
             if (category == null)
             {
                 return NotFound();
+            }
+
+            if (imageFile == null)
+            {
+                ModelState.Remove("imageFile");
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (imageFile != null)
+                    {
+                        DeleteImage(photoPost.ImageUrl);
+
+                        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        var relativePath = Path.Combine("images", uniqueFileName).Replace("\\", "/");
+                        photoPost.ImageUrl = relativePath;
+                    }
+
                     photoPost.Title = photoPostViewModel.Title;
                     photoPost.Description = photoPostViewModel.Description;
-                    photoPost.ImageUrl = photoPostViewModel.ImageUrl;
                     photoPost.Category = category;
                     photoPost.UpdatedAt = DateTime.Now;
 
@@ -278,6 +304,19 @@ namespace PhotoApp_MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(photoPost);
+        }
+
+        /// <summary>
+        /// 画像を削除するメソッドを追加
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        private void DeleteImage(string imageUrl)
+        {
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageUrl);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
         }
 
         // GET: PhotoPosts/Delete/5

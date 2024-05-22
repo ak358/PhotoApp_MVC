@@ -12,6 +12,8 @@ namespace PhotoApp_MVC.ViewModels
         public string ImageUrl { get; set; }
         public string CategoryName { get; set; }
         [ValidateNever]
+        public int UserId { get; set; }
+        [ValidateNever]
         public string UserName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
