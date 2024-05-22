@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PhotoApp_MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240517080755_init2")]
-    partial class init2
+    [Migration("20240521172410_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,31 @@ namespace PhotoApp_MVC.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EmailAdress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contact");
+                });
 
             modelBuilder.Entity("PhotoApp_MVC.Models.Category", b =>
                 {
@@ -49,13 +74,13 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Category 1",
+                            Name = "アナウンサー",
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Category 2",
+                            Name = "北海道",
                             UserId = 2
                         });
                 });
@@ -104,13 +129,24 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 5, 17, 8, 7, 54, 495, DateTimeKind.Utc).AddTicks(9795),
-                            Description = "This is a sample description",
-                            ImageUrl = "sample-url.jpg",
-                            Title = "Sample Post",
-                            UpdatedAt = new DateTime(2024, 5, 17, 8, 7, 54, 495, DateTimeKind.Utc).AddTicks(9797),
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7982),
+                            Description = "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。",
+                            ImageUrl = "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
+                            Title = "シマエナガさん",
+                            UpdatedAt = new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7992),
                             UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7993),
+                            Description = "朝のニュースをお伝えします。",
+                            ImageUrl = "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
+                            Title = "ペンギンのアナウンサー",
+                            UpdatedAt = new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7994),
+                            UserId = 2
                         });
                 });
 
@@ -153,7 +189,7 @@ namespace PhotoApp_MVC.Migrations
 
                     b.Property<string>("EmailAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -161,12 +197,16 @@ namespace PhotoApp_MVC.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmailAdress")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 

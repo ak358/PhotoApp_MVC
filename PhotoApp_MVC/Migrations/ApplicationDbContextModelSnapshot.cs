@@ -21,6 +21,31 @@ namespace PhotoApp_MVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EmailAdress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contact");
+                });
+
             modelBuilder.Entity("PhotoApp_MVC.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -46,13 +71,13 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Category 1",
+                            Name = "アナウンサー",
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Category 2",
+                            Name = "北海道",
                             UserId = 2
                         });
                 });
@@ -101,13 +126,24 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 5, 18, 1, 1, 30, 622, DateTimeKind.Local).AddTicks(5194),
-                            Description = "This is a sample description",
-                            ImageUrl = "sample-url.jpg",
-                            Title = "Sample Post",
-                            UpdatedAt = new DateTime(2024, 5, 18, 1, 1, 30, 622, DateTimeKind.Local).AddTicks(5204),
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(374),
+                            Description = "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。",
+                            ImageUrl = "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
+                            Title = "シマエナガさん",
+                            UpdatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(387),
                             UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(388),
+                            Description = "朝のニュースをお伝えします。",
+                            ImageUrl = "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
+                            Title = "ペンギンのアナウンサー",
+                            UpdatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(389),
+                            UserId = 2
                         });
                 });
 

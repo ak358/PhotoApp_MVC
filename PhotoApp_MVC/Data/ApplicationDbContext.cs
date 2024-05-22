@@ -52,22 +52,35 @@ public class ApplicationDbContext : DbContext
 
         // Add categories
         modelBuilder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Category 1", UserId = 1 },
-            new Category { Id = 2, Name = "Category 2", UserId = 2 }
+            new Category { Id = 1, Name = "アナウンサー", UserId = 1 },
+            new Category { Id = 2, Name = "北海道", UserId = 2 }
         );
 
         modelBuilder.Entity<PhotoPost>().HasData(
                 new PhotoPost
                 {
                     Id = 1,
-                    Title = "Sample Post",
-                    Description = "This is a sample description",
-                    ImageUrl = "sample-url.jpg",
-                    CategoryId = 1,
+                    Title = "シマエナガさん",
+                    Description = "冬の北海道でよく見られるちいさな鳥です。" +
+                    "「雪の妖精」と呼ばれています。",
+                    ImageUrl = "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
+                    CategoryId = 2,
                     UserId = 1,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
+                },
+                new PhotoPost
+                {
+                    Id = 2,
+                    Title = "ペンギンのアナウンサー",
+                    Description = "朝のニュースをお伝えします。",
+                    ImageUrl = "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
+                    CategoryId = 1,
+                    UserId = 2,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 }
+
             );
 
     }
