@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using PhotoApp_MVC.Models;
 using PhotoApp_MVC.Repositories;
 using PhotoApp_MVC.Repositories.IRepositories;
+
 
 internal class Program
 {
@@ -17,6 +19,9 @@ internal class Program
 
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options => options.LoginPath = "/Login");
+
+        //IConfiguration‚ğg—p‚µ‚ÄGmailSettings‚ğ\¬
+        builder.Services.Configure<GmailSettings>(builder.Configuration.GetSection("GmailSettings"));
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
