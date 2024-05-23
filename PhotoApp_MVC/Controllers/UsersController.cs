@@ -287,6 +287,18 @@ namespace PhotoApp_MVC.Controllers
             var user = await _userRepository.GetUserByIdAsync((int)id);
             if (user != null)
             {
+
+                var photoPosts = await _context.PhotoPosts
+                               .Where(c => c.UserId == user.Id)
+                               .ToListAsync();
+                _context.PhotoPosts.RemoveRange(photoPosts);
+
+                var categories = await _context.Categories
+               .Where(c => c.UserId == user.Id)
+               .ToListAsync();
+                _context.Categories.RemoveRange(categories);
+
+
                 _context.Users.Remove(user);
             }
 
