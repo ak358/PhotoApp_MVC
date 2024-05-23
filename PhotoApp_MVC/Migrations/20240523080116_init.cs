@@ -146,8 +146,8 @@ namespace PhotoApp_MVC.Migrations
                 columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "ImageUrl", "Title", "UpdatedAt", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7982), "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。", "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png", "シマエナガさん", new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7992), 1 },
-                    { 2, 1, new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7993), "朝のニュースをお伝えします。", "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png", "ペンギンのアナウンサー", new DateTime(2024, 5, 22, 2, 24, 9, 556, DateTimeKind.Local).AddTicks(7994), 2 }
+                    { 1, 2, new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1151), "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。", "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png", "シマエナガさん", new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1164), 1 },
+                    { 2, 1, new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1166), "朝のニュースをお伝えします。", "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png", "ペンギンのアナウンサー", new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1167), 2 }
                 });
 
             migrationBuilder.CreateIndex(

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PhotoApp_MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240521175531_init3")]
-    partial class init3
+    [Migration("20240523080116_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,22 +130,22 @@ namespace PhotoApp_MVC.Migrations
                         {
                             Id = 1,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(374),
+                            CreatedAt = new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1151),
                             Description = "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。",
                             ImageUrl = "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
                             Title = "シマエナガさん",
-                            UpdatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(387),
+                            UpdatedAt = new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1164),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(388),
+                            CreatedAt = new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1166),
                             Description = "朝のニュースをお伝えします。",
                             ImageUrl = "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
                             Title = "ペンギンのアナウンサー",
-                            UpdatedAt = new DateTime(2024, 5, 22, 2, 55, 30, 491, DateTimeKind.Local).AddTicks(389),
+                            UpdatedAt = new DateTime(2024, 5, 23, 17, 1, 15, 355, DateTimeKind.Local).AddTicks(1167),
                             UserId = 2
                         });
                 });

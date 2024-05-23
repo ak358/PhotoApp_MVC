@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PhotoApp_MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240521175352_init2")]
+    [Migration("20240523082836_init2")]
     partial class init2
     {
         /// <inheritdoc />
@@ -130,22 +130,22 @@ namespace PhotoApp_MVC.Migrations
                         {
                             Id = 1,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 5, 22, 2, 53, 52, 151, DateTimeKind.Local).AddTicks(8926),
+                            CreatedAt = new DateTime(2024, 5, 23, 17, 28, 35, 397, DateTimeKind.Local).AddTicks(8127),
                             Description = "冬の北海道でよく見られるちいさな鳥です。「雪の妖精」と呼ばれています。",
-                            ImageUrl = "~/images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
+                            ImageUrl = "images/bird_shimaenaga.png",
                             Title = "シマエナガさん",
-                            UpdatedAt = new DateTime(2024, 5, 22, 2, 53, 52, 151, DateTimeKind.Local).AddTicks(8940),
+                            UpdatedAt = new DateTime(2024, 5, 23, 17, 28, 35, 397, DateTimeKind.Local).AddTicks(8138),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 5, 22, 2, 53, 52, 151, DateTimeKind.Local).AddTicks(8941),
+                            CreatedAt = new DateTime(2024, 5, 23, 17, 28, 35, 397, DateTimeKind.Local).AddTicks(8140),
                             Description = "朝のニュースをお伝えします。",
-                            ImageUrl = "~/images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
+                            ImageUrl = "images/animal_chara_radio_penguin.png",
                             Title = "ペンギンのアナウンサー",
-                            UpdatedAt = new DateTime(2024, 5, 22, 2, 53, 52, 151, DateTimeKind.Local).AddTicks(8941),
+                            UpdatedAt = new DateTime(2024, 5, 23, 17, 28, 35, 397, DateTimeKind.Local).AddTicks(8140),
                             UserId = 2
                         });
                 });
@@ -218,7 +218,7 @@ namespace PhotoApp_MVC.Migrations
                             Id = 1,
                             EmailAdress = "admin@example.com",
                             Name = "AdminUser",
-                            Password = "adminpassword",
+                            Password = "password",
                             RoleId = 1
                         },
                         new
@@ -226,7 +226,7 @@ namespace PhotoApp_MVC.Migrations
                             Id = 2,
                             EmailAdress = "user@example.com",
                             Name = "RegularUser",
-                            Password = "userpassword",
+                            Password = "password",
                             RoleId = 2
                         });
                 });

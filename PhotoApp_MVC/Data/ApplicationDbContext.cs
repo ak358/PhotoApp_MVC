@@ -46,8 +46,8 @@ public class ApplicationDbContext : DbContext
 
         // Add users
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Name = "AdminUser", EmailAdress = "admin@example.com", Password = "adminpassword", RoleId = 1 },
-            new User { Id = 2, Name = "RegularUser", EmailAdress = "user@example.com", Password = "userpassword", RoleId = 2 }
+            new User { Id = 1, Name = "AdminUser", EmailAdress = "admin@example.com", Password = "password", RoleId = 1 },
+            new User { Id = 2, Name = "RegularUser", EmailAdress = "user@example.com", Password = "password", RoleId = 2 }
         );
 
         // Add categories
@@ -63,7 +63,7 @@ public class ApplicationDbContext : DbContext
                     Title = "シマエナガさん",
                     Description = "冬の北海道でよく見られるちいさな鳥です。" +
                     "「雪の妖精」と呼ばれています。",
-                    ImageUrl = "images/e4a7662d-9cfa-44e4-b686-dd4216338b43_bird_shimaenaga.png",
+                    ImageUrl = "images/bird_shimaenaga.png",
                     CategoryId = 2,
                     UserId = 1,
                     CreatedAt = DateTime.Now,
@@ -74,7 +74,7 @@ public class ApplicationDbContext : DbContext
                     Id = 2,
                     Title = "ペンギンのアナウンサー",
                     Description = "朝のニュースをお伝えします。",
-                    ImageUrl = "images/e57e5036-abf4-4431-bc97-3215f0a88c5b_animal_chara_radio_penguin.png",
+                    ImageUrl = "images/animal_chara_radio_penguin.png",
                     CategoryId = 1,
                     UserId = 2,
                     CreatedAt = DateTime.Now,
