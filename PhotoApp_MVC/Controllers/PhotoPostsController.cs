@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -111,6 +113,11 @@ namespace PhotoApp_MVC.Controllers
             {
                 Categories = categorySelectList
             };
+
+            if (categories.Count == 0)
+            {
+                ViewData["message"] = "カテゴリが0件です。カテゴリを登録してください。";
+            }
 
             return View(photoPostViewModel);
 
