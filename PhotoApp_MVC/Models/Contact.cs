@@ -14,7 +14,7 @@ public class Contact
     [EmailAddress(ErrorMessage = "有効なメールアドレスを入力してください。")]
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "有効なメールアドレスを入力してください。")]
 
-    public string EmailAdress { get; set; }
+    public string EmailAddress { get; set; }
 
     [Required(ErrorMessage = "メッセージを入力してください。")]
     public string Message { get; set; }

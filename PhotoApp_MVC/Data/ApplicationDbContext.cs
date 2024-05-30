@@ -35,7 +35,7 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<User>()
-        .HasIndex(u => u.EmailAdress)
+        .HasIndex(u => u.EmailAddress)
         .IsUnique();
 
         // Add roles
@@ -46,8 +46,8 @@ public class ApplicationDbContext : DbContext
 
         // Add users
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Name = "AdminUser", EmailAdress = "admin@example.com", Password = "password", RoleId = 1 },
-            new User { Id = 2, Name = "RegularUser", EmailAdress = "user@example.com", Password = "password", RoleId = 2 }
+            new User { Id = 1, Name = "AdminUser", EmailAddress = "admin@example.com", Password = "password", RoleId = 1 },
+            new User { Id = 2, Name = "RegularUser", EmailAddress = "user@example.com", Password = "password", RoleId = 2 }
         );
 
         // Add categories

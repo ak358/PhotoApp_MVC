@@ -29,7 +29,7 @@ namespace PhotoApp_MVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("EmailAdress")
+                    b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -184,7 +184,7 @@ namespace PhotoApp_MVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("EmailAdress")
+                    b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -202,7 +202,7 @@ namespace PhotoApp_MVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailAdress")
+                    b.HasIndex("EmailAddress")
                         .IsUnique();
 
                     b.HasIndex("RoleId");
@@ -213,7 +213,7 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 1,
-                            EmailAdress = "admin@example.com",
+                            EmailAddress = "admin@example.com",
                             Name = "AdminUser",
                             Password = "password",
                             RoleId = 1
@@ -221,7 +221,7 @@ namespace PhotoApp_MVC.Migrations
                         new
                         {
                             Id = 2,
-                            EmailAdress = "user@example.com",
+                            EmailAddress = "user@example.com",
                             Name = "RegularUser",
                             Password = "password",
                             RoleId = 2

@@ -51,7 +51,7 @@ namespace PhotoApp_MVC.Controllers
             {
                 Id = user.Id,
                 Name = user.Name,
-                EmailAdress = user.EmailAdress,
+                EmailAddress = user.EmailAddress,
                 Password = user.Password,
                 RoleName = user.Role.Name
             };
@@ -95,13 +95,13 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
+        public async Task<IActionResult> Create([Bind("Name,EmailAddress,Password,RoleName")] UserViewModel userViewModel)
         { 
 
-            bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
+            bool emailExists = await _context.Users.AnyAsync(u => u.EmailAddress == userViewModel.EmailAddress);
             if (emailExists)
             {
-                ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+                ModelState.AddModelError("EmailAddress", "このメールアドレスは既に使用されています。");
                 if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     return RedirectToAction(nameof(Index));
@@ -123,7 +123,7 @@ namespace PhotoApp_MVC.Controllers
                 {
                     Name = userViewModel.Name,
                     Password = userViewModel.Password,
-                    EmailAdress = userViewModel.EmailAdress,
+                    EmailAddress = userViewModel.EmailAddress,
                     Role = role,
                     RoleId = role.Id
                 };
@@ -178,7 +178,7 @@ namespace PhotoApp_MVC.Controllers
             {
                 Id = user.Id,
                 Name = user.Name,
-                EmailAdress = user.EmailAdress,
+                EmailAddress = user.EmailAddress,
                 Password = user.Password,
                 RoleName = user.Role.Name
             };
@@ -196,16 +196,16 @@ namespace PhotoApp_MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
-            [Bind("Name,EmailAdress,Password,RoleName")] UserViewModel userViewModel)
+            [Bind("Name,EmailAddress,Password,RoleName")] UserViewModel userViewModel)
         {
             User user = await _userRepository.GetUserByIdAsync((int)id);
 
-            if (user.EmailAdress != userViewModel.EmailAdress)
+            if (user.EmailAddress != userViewModel.EmailAddress)
             {
-                bool emailExists = await _context.Users.AnyAsync(u => u.EmailAdress == userViewModel.EmailAdress);
+                bool emailExists = await _context.Users.AnyAsync(u => u.EmailAddress == userViewModel.EmailAddress);
                 if (emailExists)
                 {
-                    ModelState.AddModelError("EmailAdress", "このメールアドレスは既に使用されています。");
+                    ModelState.AddModelError("EmailAddress", "このメールアドレスは既に使用されています。");
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -215,7 +215,7 @@ namespace PhotoApp_MVC.Controllers
                 try
                 {
                     user.Name = userViewModel.Name;
-                    user.EmailAdress = userViewModel.EmailAdress;
+                    user.EmailAddress = userViewModel.EmailAddress;
                     user.Password = userViewModel.Password;
 
                     Role role = _context.Roles.FirstOrDefault(r => r.Name == userViewModel.RoleName);
@@ -270,7 +270,7 @@ namespace PhotoApp_MVC.Controllers
             {
                 Id = user.Id,
                 Name = user.Name,
-                EmailAdress = user.EmailAdress,
+                EmailAddress = user.EmailAddress,
                 Password = user.Password,
                 RoleName = user.Role.Name
             };

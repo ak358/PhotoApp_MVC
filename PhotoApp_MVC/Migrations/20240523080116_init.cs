@@ -20,7 +20,7 @@ namespace PhotoApp_MVC.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailAdress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -48,7 +48,7 @@ namespace PhotoApp_MVC.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailAdress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -125,7 +125,7 @@ namespace PhotoApp_MVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "EmailAdress", "Name", "Password", "RoleId" },
+                columns: new[] { "Id", "EmailAddress", "Name", "Password", "RoleId" },
                 values: new object[,]
                 {
                     { 1, "admin@example.com", "AdminUser", "adminpassword", 1 },
@@ -166,9 +166,9 @@ namespace PhotoApp_MVC.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_EmailAdress",
+                name: "IX_Users_EmailAddress",
                 table: "Users",
-                column: "EmailAdress",
+                column: "EmailAddress",
                 unique: true);
 
             migrationBuilder.CreateIndex(

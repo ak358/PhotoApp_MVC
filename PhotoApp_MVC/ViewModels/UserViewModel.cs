@@ -14,7 +14,7 @@ namespace PhotoApp_MVC.ViewModels
         [Display(Name = "メールアドレス")]
 
         [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "有効なメールアドレスを入力してください。")]
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
         [Display(Name = "パスワード")]
         public string Password { get; set; }
         [Display(Name = "ロール")]

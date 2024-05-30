@@ -35,7 +35,7 @@ namespace PhotoApp_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,EmailAdress,Message")] Contact contact)
+        public async Task<IActionResult> Create([Bind("Name,EmailAddress,Message")] Contact contact)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace PhotoApp_MVC.Controllers
 
                     message.Body = new TextPart("plain")
                     {
-                        Text = $"お名前：{contact.Name}\nメールアドレス：{contact.EmailAdress}\nメッセージ：{contact.Message}"
+                        Text = $"お名前：{contact.Name}\nメールアドレス：{contact.EmailAddress}\nメッセージ：{contact.Message}"
                     };
 
                     //using (var client = new MailKit.Net.Smtp.SmtpClient())

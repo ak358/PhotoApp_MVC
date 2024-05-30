@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
 
             User user = await _context.Users
                                 .Include(u => u.Role).
-                                FirstOrDefaultAsync(u => u.EmailAdress == loginViewModel.EmailAdress
+                                FirstOrDefaultAsync(u => u.EmailAddress == loginViewModel.EmailAddress
                             && u.Password == loginViewModel.Password);
 
             if (user != null)

@@ -15,7 +15,7 @@ namespace PhotoApp_MVC.Models
         [EmailAddress(ErrorMessage = "有効なメールアドレスを入力してください。")]
         [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "有効なメールアドレスを入力してください。")]
         
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "パスワードを入力してください。")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "パスワードは6文字以上20文字以下で入力してください。")]
